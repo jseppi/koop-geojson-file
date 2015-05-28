@@ -1,56 +1,57 @@
-# koop-sample-provider 
+# koop-geojson-file
 
-## A sample provider for Koop 
+## GeoJSON file provider for Koop 
 
-This repo is meant to act as a simple starting point for developing new providers for Koop.
+Based on code from [koop-sample-provider](https://github.com/koopjs/koop-sample-provider)
 
-------------
+### Usage
 
-### What's a "provider"
+For information on using Koop, see https://github.com/esri/koop 
 
-A Koop provider is a sort of plugin to Koop that wraps any API or source of data so that it can be used within the Koop's codebase. Koop doesn't come with any providers out of the box which is nice from the stand point of development (keeping it all seperate means Koop remains light), but present a few challenges to things like deploying Koop and understanding how all the bits and peices work.  
+Install dependencies:
 
-Providers all follow a standard structure that closely resembles that of most MVC frameworks. A provider consists of `routes`, `controllers`, `models` and `views` (each explained in more detail below). The basic gist is that each provider is "registered" into Koop at the time the server is started. The provider's routes are bound into the Koop server. Each route maps to a specific `controller` and each controller is passed the providers `model`. Each `model` is designed to have to access to the core code in Koop which gives it access to centralized things like a Cache (db) and shared code for doing like creating FeatureServices.
+```sh
+npm install koop koop-geojson-file express ejs
+```
 
-### Koop Architecture
+Make sure your `config` contains a `geojsonFiles` key that holds an array of paths to the GeoJSON files you'd like to serve as FeatureServices. See example code below:
 
-Koop is split up into two core repos: [https://github.com/Esri/koop](https://github.com/Esri/koop) and [https://github.com/Esri/koop-server](https://github.com/Esri/koop-server). Both of these are built on top of the Express framework and follow its middleware pattern. The primary [Koop](https://github.com/Esri/koop) repo is a very simple shell. 
+```javascript
+var config = {
+  "server": {"port": 1337},
+  "geojsonFiles": [
+    "/data/test-file.geojson"
+    "/data/other-file.geojson"
+  ]
+};
 
-### index.js 
+var koop = require('koop')(config);
+var koopGeoJson = require('koop-geojson-file');
 
-The file `index.js` describes the provider. It sets a "pattern" for the provider to use in its routing (Koop tries to build some routes by default like ones for FeatureServices), and it includes the routes, controller, and model for the provider. This file tells koop everything it needs to know about the provider.
+koop.register(koopGeoJson);
 
-### Routes 
+var express = require('express');
+var app = express();
 
-Routes tell koop what methods in the controller should respond to what requests.
+app.use(koop);
 
-### Controller
+app.listen(process.env.PORT || config.server.port,  function() {
+  console.log("Listening at http://%s:%d/", this.address().address, this.address().port);
+});
+```
 
-Controllers handle formatting request params and query strings, passing requests to Models, and responding to requests with data from Models. 
+koop-geojson-file uses the files' basenames (without extensions) to route. For example, with the `geojsonFiles` as defined in the above example, routes to FeatureServices would be:
 
-### Models
+- http://localhost:1337/geojson/test-file/FeatureServer
+- http://localhost:1337/geojson/test-file/FeatureServer/0
+- http://localhost:1337/geojson/other-file/FeatureServer
+- http://localhost:1337/geojson/other-file/FeatureServer/0
 
-Models do the dirty work. They call APIs or query databases and then interact with Koop optional cache and other code to help with processing of data from external sources. The primary thing a Model should do is convert external data, in any format, into GeoJSON. The generated GeoJSON from Models is used in the rest of Koop as the standard format form which everything is based.  
+### Developing
 
-### Views 
-
-Since JSON is the primary output of Koop views are not really used, but they can be. Views expose HTML templates that could be used to help interact with a provider. 
-
-### Getting Started 
-
-  ```
-    git clone git@github.com:chelm/koop-sample-provider.git
-    cd koop-sample-provider && rm -rf .git
-    npm install
-    # edit the index.js file
-    # edit the files in test/ (for TDD)
-    # edit the routes/index.js
-    # edit the controller/index.js 
-    # edit the models/Sample.js 
-  ``` 
-
-
-### Using a provider in Koop 
-
-Typically a provider would be installed within Koop via `npm install`. You can either publish your provider to NPM or use NPM to install the provider directly from a tarball from a github repo (or anywhere). 
-
+```sh
+git clone https://github.com/jseppi/koop-geojson-file.git
+cd koop-geojson-file
+npm install
+npm test
+```
