@@ -1,6 +1,6 @@
 # koop-geojson-file
 
-## GeoJSON file provider for Koop 
+GeoJSON file provider for Koop 
 
 Based on code from [koop-sample-provider](https://github.com/koopjs/koop-sample-provider)
 
