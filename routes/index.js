@@ -3,6 +3,6 @@
 
 module.exports = {
   // route : handler
-  'get /sample': 'index',
-  'get /sample/:id': 'get'
-}
+  'get /geojson': 'index',
+  'get /geojson/:filename': 'get'
+};

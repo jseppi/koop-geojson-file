@@ -2,44 +2,45 @@ var should = require('should'),
   sinon = require('sinon'),
   config = require('config'),
   request = require('supertest'),
-  // we require Koop so we can fake having an actual server running 
-  koop = require('koop-server')(config);
-
   // we need koop/lib so we can have access to shared code not exposed directly off the koop object
-  kooplib = require('koop-server/lib');
+  kooplib = require('koop/lib'),
+  // we require Koop so we can fake having an actual server running 
+  koop = require('koop')(config);
 
-var sample;
 
-before(function(done){
+
+var geojsonModel;
+
+before(function (done) {
   // pull in the provider module
   var provider = require('../index.js');
 
   // create the model
-  sample = new provider.model( kooplib );
+  geojsonModel = new provider.model(kooplib);
 
   // pass the model to the controller 
-  var controller = new provider.controller( sample );
+  var controller = new provider.controller(geojsonModel, kooplib.BaseController);
 
   // bind the default routes so we can test that those work
-  koop._bindDefaultRoutes( provider.name, provider.pattern, controller );
+  koop._bindDefaultRoutes(provider.name, provider.pattern, controller);
 
   // bind the routes into Koop 
-  koop._bindRoutes( provider.routes, controller );
+  koop._bindRoutes(provider.routes, controller);
   done();
 });
 
-after(function(done){
+after(function (done) {
   done();
 });
 
-describe('Sample Controller', function(){
+describe('GeoJsonFile Controller', function () {
 
-    describe('get', function() {
-      before(function(done ){
+    describe('get', function () {
+      before(function (done) {
 
         // we stub the find method so we dont actually try to call it
         // we're not testing the model here, just that the controller should call the model 
-        sinon.stub(sample, 'find', function(id, options, callback){
+        sinon.stub(geojsonModel, 'find', function (id, options, callback) {
           callback(null, [{ 
             type:'FeatureCollection', 
             features: [{ properties: {}, coordinates: {}, type: 'Feature' }] 
@@ -49,50 +50,50 @@ describe('Sample Controller', function(){
         done();
       });
 
-      after(function(done){
+      after(function (done){
         // restore the stubbed methods so we can use them later if we need to
-        sample.find.restore();
+        geojsonModel.find.restore();
         done();
       });
 
-      it('/sample/1 should call find', function(done){
+      it('/geojson/test-file should call find', function (done){
         request(koop)
-          .get('/sample/1')
-          .end(function(err, res){
+          .get('/geojson/test-file')
+          .end(function (err, res) {
             res.status.should.equal(200);
-            //sample.find.called.should.equal(true);
+            //geojsonModel.find.called.should.equal(true);
             done();
         }); 
       });
     });
 
-    describe('index', function() {
-      it('/sample should return 200', function(done){
+    describe('index', function () {
+      it('/geojson should return 200', function (done){
         request(koop)
-          .get('/sample')
-          .end(function(err, res){
+          .get('/geojson')
+          .end(function (err, res) {
             res.status.should.equal(200);
             done();
         });
       });
     });
 
-    describe('preview', function() {
-      it('/sample/1/preview should return 200', function(done){
+    describe('preview', function () {
+      it('/geojson/test-file/preview should return 200', function (done){
         request(koop)
-          .get('/sample/1/preview')
-          .end(function(err, res){
+          .get('/geojson/test-file/preview')
+          .end(function (err, res) {
             res.status.should.equal(200);
             done();
         });
       });
     });
 
-    describe('FeatureServer', function() {
-      it('/sample/1/FeatureServer should return 200', function(done){
+    describe('FeatureServer', function () {
+      it('/geojson/test-file/FeatureServer should return 200', function (done){
         request(koop)
-          .get('/sample/1/FeatureServer')
-          .end(function(err, res){
+          .get('/geojson/test-file/FeatureServer')
+          .end(function (err, res) {
             res.status.should.equal(200);
             done();
         });

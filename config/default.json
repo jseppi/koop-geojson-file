@@ -1,7 +1,5 @@
 { 
-  "db": {
-    "postgis": {
-      "conn": "postgres://localhost/koopdev"
-    }
-  }
+  "geojsonFiles": [
+    "./test/test-file.geojson"
+  ]
 }

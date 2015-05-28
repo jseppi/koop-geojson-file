@@ -1,18 +1,19 @@
 var should = require('should'),
   config = require('config'),
-  koop = require('koop-server/lib');
+  kooplib = require('koop/lib');
+
+var GeoJsonFile;
 
 before(function (done) {
-  koop.Cache.db = koop.PostGIS.connect( config.db.postgis.conn );
-  Sample = new require('../models/Sample.js')( koop );
+  GeoJsonFile = new require('../models/GeoJsonFile.js')(kooplib);
   done();
 });
 
-describe('Sample Model', function(){
+describe('GeoJsonFile Model', function (){
 
-    describe('when getting data', function(){
-      it('should find and return geojson', function(done){
-        Sample.find(1, {}, function(err, data){
+    describe('when getting data', function (){
+      it('should find and return geojson', function (done){
+        GeoJsonFile.find('test-file', {}, function (err, data){
           // there should not be any errors
           should.not.exist(err);
           // should always return the data as geojson

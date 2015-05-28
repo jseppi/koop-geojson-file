@@ -1,7 +1,7 @@
 {
-  "name": "koop-sample",
-  "version": "0.0.1",
-  "description": "A sample provider for koop ",
+  "name": "koop-geojson-file",
+  "version": "1.0.0",
+  "description": "A GeoJSON file provider for koop",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -10,16 +10,22 @@
     "test": "mocha test/"
   },
   "dependencies": {
-    "koop-server": "*",
+    "array-find": "^1.0.0",
+    "async": "^1.0.0",
+    "chokidar": "^1.0.1",
     "config": "~0.4.35",
-    "ejs": "~1.0.0"
+    "ejs": "^2.3.1",
+    "geojson-normalize": "0.0.0",
+    "geojson-validation": "^0.1.5"
   },
-  "author": "Chris Helm",
+  "author": "James Seppi",
   "license": "BSD-2-Clause",
   "devDependencies": {
-    "supertest": "~0.11.0",
+    "koop": "^2.1.9",
+    "mocha": "^2.2.5",
     "should": "~4.0.4",
-    "sinon": "~1.10.3"
+    "sinon": "~1.10.3",
+    "supertest": "~0.11.0"
   },
   "repository": {
     "type": "git",
