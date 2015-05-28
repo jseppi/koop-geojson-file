@@ -14,7 +14,6 @@
     "async": "^1.0.0",
     "chokidar": "^1.0.1",
     "config": "~0.4.35",
-    "ejs": "^2.3.1",
     "geojson-normalize": "0.0.0",
     "geojson-validation": "^0.1.5"
   },
@@ -25,6 +24,7 @@
   "license": "BSD-2-Clause",
   "devDependencies": {
     "koop": "^2.1.9",
+    "ejs": "^2.3.1",
     "mocha": "^2.2.5",
     "should": "~4.0.4",
     "sinon": "~1.10.3",
