@@ -13,7 +13,7 @@ describe('GeoJsonFile Model', function (){
 
     describe('when getting data', function (){
       it('should find and return geojson', function (done){
-        GeoJsonFile.find('test-file', {}, function (err, data){
+        GeoJsonFile.find('test-name', {}, function (err, data){
           // there should not be any errors
           should.not.exist(err);
           // should always return the data as geojson

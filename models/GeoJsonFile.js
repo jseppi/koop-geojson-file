@@ -1,7 +1,6 @@
+var R = require('ramda');
 var fs = require('fs');
 var assert = require('assert');
-var path = require('path');
-var find = require('array-find');
 var chokidar = require('chokidar');
 var gjValidation = require('geojson-validation');
 var gjNormalize = require('geojson-normalize');
@@ -12,27 +11,32 @@ var GeoJsonFile = function (koop) {
   var model = {};
   model.__proto__ = koop.BaseModel(koop);
 
-  var registeredFilePaths = koop.config.geojsonFiles;
-  if (!registeredFilePaths || !registeredFilePaths.length) {
+  var geojsonFiles = koop.config.geojsonFiles;
+
+
+  if (!geojsonFiles || !geojsonFiles.length) {
     throw new Error("geojsonFiles array must be specified in config");
   }
-  var watcher = chokidar.watch(registeredFilePaths);
+
+  var filePaths = R.pluck('name', geojsonFiles);
+  var watcher = chokidar.watch(filePaths);
   watcher.on('change', function (filePath) {
     //on file change, just remove from cache so that the next call to find
     // will reload it
-    var fileName = getFileName(filePath);
-    koop.Cache.remove(type, fileName, {}, function (/* err, success */) {});
+    var name = nameForPath(filePath);
+    if (name) {
+      koop.Cache.remove(type, name, {}, function (/* err, success */) {});
+    }
   });
 
-  function getFileName(filePath) {
-    return path.basename(filePath, path.extname(filePath));
-  }
+  function nameForPath(path) {
+    var found = R.find(R.propEq('path', path), geojsonFiles) || {};
+    return found.name;
+  } 
 
-  function getRegisteredFilePath(fileName) {
-    var foundPath = find(registeredFilePaths, function (registeredFilePath) {
-      return getFileName(registeredFilePath) === fileName;
-    });
-    return foundPath;
+  function pathForName(name) { 
+    var found = R.find(R.propEq('name', name), geojsonFiles) || {};
+    return found.path;
   }
 
   function getFeatureCollection(filePath, callback) {
@@ -55,22 +59,21 @@ var GeoJsonFile = function (koop) {
     });
   }
 
-  //fileName should be the root fileName, with no path or extension
-  model.find = function (fileName, options, callback) {
+  model.find = function (name, options, callback) {
     
-    // check the cache for data with this type & fileName 
-    koop.Cache.get(type, fileName, options, function (err, entry) {
+    // check the cache for data with this type & name 
+    koop.Cache.get(type, name, options, function (err, entry) {
       if (err) {
         // if we get an err then get the data and insert it 
-        var filePath = getRegisteredFilePath(fileName);
+        var filePath = pathForName(name);
         if (!filePath) {
-          throw new Error("GeoJson file not found: " + fileName);
+          throw new Error("GeoJson file not found: " + name);
         }
 
         getFeatureCollection(filePath, function (error, featureCollection) {
           assert.ifError(error);
 
-          koop.Cache.insert(type, fileName, featureCollection, 0, function (err, success) {
+          koop.Cache.insert(type, name, featureCollection, 0, function (err, success) {
             assert.ifError(err);
             if (success) {
               callback(null, featureCollection);

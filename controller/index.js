@@ -12,7 +12,7 @@ var Controller = function(GeoJsonFile, BaseController) {
 
   // get a resource from the providers model 
   controller.get = function (req, res) {
-    GeoJsonFile.find(req.params.filename, req.query, function (err, data) {
+    GeoJsonFile.find(req.params.name, req.query, function (err, data) {
       if (err){
         res.send(err, 500);
       } else {
@@ -26,7 +26,7 @@ var Controller = function(GeoJsonFile, BaseController) {
     var callback = req.query.callback;
     delete req.query.callback;
 
-    GeoJsonFile.find(req.params.filename, req.query, function (err, data) {
+    GeoJsonFile.find(req.params.name, req.query, function (err, data) {
       if (err) {
         res.send(err, 500);
       } else {
@@ -41,7 +41,7 @@ var Controller = function(GeoJsonFile, BaseController) {
   // render templates and views 
   controller.preview = function (req, res) {
     res.render(__dirname + '/../views/demo',
-      {filename: req.params.filename}
+      {name: req.params.name}
     );
   };
   

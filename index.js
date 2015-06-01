@@ -2,8 +2,8 @@
 exports.name = 'geojson';
 
 // the "pattern" is used to build routes
-// this provider uses filenames (without the extension)
-exports.pattern = '/:filename';
+// this provider uses names (as specified in config file)
+exports.pattern = '/:name';
 
 // attached the controller to the provider 
 exports.controller = require('./controller');

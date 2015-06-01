@@ -7,8 +7,6 @@ var should = require('should'),
   // we require Koop so we can fake having an actual server running 
   koop = require('koop')(config);
 
-
-
 var geojsonModel;
 
 before(function (done) {
@@ -56,9 +54,9 @@ describe('GeoJsonFile Controller', function () {
         done();
       });
 
-      it('/geojson/test-file should call find', function (done){
+      it('/geojson/test-name should call find', function (done){
         request(koop)
-          .get('/geojson/test-file')
+          .get('/geojson/test-name')
           .end(function (err, res) {
             res.status.should.equal(200);
             //geojsonModel.find.called.should.equal(true);
@@ -79,9 +77,9 @@ describe('GeoJsonFile Controller', function () {
     });
 
     describe('preview', function () {
-      it('/geojson/test-file/preview should return 200', function (done){
+      it('/geojson/test-name/preview should return 200', function (done){
         request(koop)
-          .get('/geojson/test-file/preview')
+          .get('/geojson/test-name/preview')
           .end(function (err, res) {
             res.status.should.equal(200);
             done();
@@ -90,9 +88,9 @@ describe('GeoJsonFile Controller', function () {
     });
 
     describe('FeatureServer', function () {
-      it('/geojson/test-file/FeatureServer should return 200', function (done){
+      it('/geojson/test-name/FeatureServer should return 200', function (done){
         request(koop)
-          .get('/geojson/test-file/FeatureServer')
+          .get('/geojson/test-name/FeatureServer')
           .end(function (err, res) {
             res.status.should.equal(200);
             done();

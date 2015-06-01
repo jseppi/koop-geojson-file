@@ -1,6 +1,6 @@
 {
   "name": "koop-geojson-file",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A GeoJSON file provider for koop",
   "main": "index.js",
   "directories": {
@@ -10,12 +10,12 @@
     "test": "mocha test/"
   },
   "dependencies": {
-    "array-find": "^1.0.0",
     "async": "^1.0.0",
     "chokidar": "^1.0.1",
     "config": "~0.4.35",
     "geojson-normalize": "0.0.0",
-    "geojson-validation": "^0.1.5"
+    "geojson-validation": "^0.1.5",
+    "ramda": "^0.14.0"
   },
   "author": {
     "name": "James Seppi",
