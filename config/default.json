@@ -1,5 +1,8 @@
 { 
   "geojsonFiles": [
-    "./test/test-file.geojson"
+    {
+      "name": "test-name",
+      "path": "./test/test-file.geojson"
+    }  
   ]
 }

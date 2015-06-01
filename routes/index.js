@@ -4,5 +4,5 @@
 module.exports = {
   // route : handler
   'get /geojson': 'index',
-  'get /geojson/:filename': 'get'
+  'get /geojson/:name': 'get'
 };

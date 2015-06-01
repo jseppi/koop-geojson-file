@@ -14,14 +14,14 @@ Install dependencies:
 npm install koop koop-geojson-file express ejs
 ```
 
-Make sure your `config` contains a `geojsonFiles` key that holds an array of paths to the GeoJSON files you'd like to serve as FeatureServices. See example code below:
+Make sure your `config` contains a `geojsonFiles` key that holds an array of objects with `name` and `path` properties for each GeoJSON file you'd like to serve as a FeatureService. See example code below:
 
 ```javascript
 var config = {
   "server": {"port": 1337},
   "geojsonFiles": [
-    "/data/test-file.geojson"
-    "/data/other-file.geojson"
+    {"name": "test-name", "path": "/data/test-file.geojson"},
+    {"name": "other-name", "path": "/data/other-file.geojson"}
   ]
 };
 
@@ -40,12 +40,12 @@ app.listen(process.env.PORT || config.server.port,  function() {
 });
 ```
 
-koop-geojson-file uses the files' basenames (without extensions) to route. For example, with the `geojsonFiles` as defined in the above example, routes to FeatureServices would be:
+koop-geojson-file uses the `name` property of the objects in `geojsonFiles` to route. For example, with the `geojsonFiles` as defined in the above example, routes to FeatureServices would be:
 
-- http://localhost:1337/geojson/test-file/FeatureServer
-- http://localhost:1337/geojson/test-file/FeatureServer/0
-- http://localhost:1337/geojson/other-file/FeatureServer
-- http://localhost:1337/geojson/other-file/FeatureServer/0
+- http://localhost:1337/geojson/test-name/FeatureServer
+- http://localhost:1337/geojson/test-name/FeatureServer/0
+- http://localhost:1337/geojson/other-name/FeatureServer
+- http://localhost:1337/geojson/other-name/FeatureServer/0
 
 ### Developing
 
