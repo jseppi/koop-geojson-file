@@ -1,5 +1,7 @@
 # koop-geojson-file
 
+![](https://img.shields.io/npm/v/koop-geojson-file.svg)
+
 GeoJSON file provider for Koop 
 
 Based on code from [koop-sample-provider](https://github.com/koopjs/koop-sample-provider)
